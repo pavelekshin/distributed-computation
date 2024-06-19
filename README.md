@@ -1,4 +1,4 @@
-# Python distributed-computation example with Redis Queue and Redis Stream
+# Python distributed-computation example with Redis List as queue and Redis Stream
 
 ```bash
 .
@@ -23,6 +23,6 @@
 `cp .env.example .env`
 
 ### About:
-- A complete examples showing how to implement a distributed-computation model using asyncio Python with Redis Queue and Redis Stream.
-- redis_reliable_queue - rude redis queue with reliable pattern enhancement
-- redis-stream  - redis stream with ack, program runtime 20s
+- A complete examples showing how to implement a distributed-computation model using asyncio Python with Redis List as queue and Redis Stream.
+- redis_reliable_queue - rude redis list as queue with reliable queue pattern enhancement
+- redis-stream  - redis stream with ACK, program runtime 20s
