@@ -45,7 +45,9 @@ async def run():
             name = f"Handler-{_}"
             tasks.append(
                 asyncio.create_task(
-                    pending_handler.pending_handler(settings.STREAM, settings.GROUP, name),
+                    pending_handler.pending_handler(
+                        settings.STREAM, settings.GROUP, name
+                    ),
                     name=name,
                 )
             )

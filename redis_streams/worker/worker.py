@@ -66,5 +66,3 @@ async def worker(skey: str, gname: str, name: str):
             for ids, message in messages:
                 await process_message(message["json"], ids, skey, gname)
                 await print_pending_info(stream, gname)
-
-

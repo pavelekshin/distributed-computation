@@ -1,10 +1,12 @@
+import asyncio
+
 from redis_streams import redis
 from redis_streams.worker import worker
 
 
 async def pending_handler(skey: str, gname: str, name: str):
     """
-    Consumes pending item from the Redis queue
+    Consumes pending item with IDLE 15sec from the Redis queue
     """
     while True:
         pr = await redis.redis_client.xpending_range(
