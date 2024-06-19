@@ -33,7 +33,7 @@ async def create_group(skey: str, gname: str) -> None:
     :param gname: consumer group name
     """
     try:
-        await redis.redis_client.xgroup_create(name=skey, groupname=gname)
+        await redis.redis_client.xgroup_create(name=skey, groupname=gname, id=0)
     except ResponseError as e:
         print(f"Raised: {e}")
 
