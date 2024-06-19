@@ -4,7 +4,7 @@ from json import loads
 from redis_reliable_queue import redis
 
 
-async def process_message(queue: str, message_json: str):
+async def process_message(queue: str, message_json: str) -> None:
     """
     Process messages retrieved from queue
     :param queue:  - queue name
@@ -25,11 +25,11 @@ async def process_message(queue: str, message_json: str):
         await redis.redis_client.lpush(queue, message_json)
 
 
-async def worker(queue: str, processing_queue: str):
+async def worker(queue: str, processing_queue: str) -> None:
     """
     Consumes items from the Redis queue
-    :param queue:  - queue name
-    :param processing_queue:  - processing queue name
+    :param queue: queue name
+    :param processing_queue: processing queue name
     """
 
     while True:

@@ -8,12 +8,12 @@ from redis_reliable_queue import redis
 from settings import settings
 
 
-async def data_generator(start: int, job_id: str):
+async def data_generator(start: int, job_id: str) -> list[dict[str, str | int]]:
     """
     Generates data
-    :param start:  - range
-    :param job_id: - job uuid
-    :return:
+    :param start: range
+    :param job_id: job uuid
+    :return: list of data
     """
     return [
         {
@@ -29,10 +29,10 @@ async def data_generator(start: int, job_id: str):
     ]
 
 
-async def producer(queue):
+async def producer(queue) -> None:
     """
     Puts all the requested work into the work queue.
-    :param queue: - queue name
+    :param queue: queue name
     """
     start = 0
     while True:

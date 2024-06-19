@@ -8,11 +8,11 @@ from redis_streams import redis
 from settings import settings
 
 
-async def data_generator(start: int, job_id: str):
+async def data_generator(start: int, job_id: str) -> list[dict[str, str | int]]:
     """
     Generates data
-    :param start:  - range
-    :param job_id: - job uuid
+    :param start: range
+    :param job_id: job uuid
     :return:
     """
     return [
@@ -29,9 +29,10 @@ async def data_generator(start: int, job_id: str):
     ]
 
 
-async def producer(stream: str):
+async def producer(stream: str) -> None:
     """
     Puts all the requested work into the work queue.
+    :param stream: stream name
     """
     start = 0
     while True:
