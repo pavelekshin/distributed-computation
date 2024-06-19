@@ -1,8 +1,6 @@
 import random
 from json import loads
 
-from redis import ResponseError
-
 from redis_streams import redis
 
 
@@ -28,18 +26,6 @@ async def process_message(message_json: str, ids: str, skey: str, gname: str) ->
         print("\tProcessing failed - requeuing...")
 
 
-async def create_group(skey: str, gname: str) -> None:
-    """
-    Create consumer group
-    :param skey: stream name
-    :param gname: consumer group name
-    """
-    try:
-        await redis.redis_client.xgroup_create(name=skey, groupname=gname, id=0)
-    except ResponseError as e:
-        print(f"raised: {e}")
-
-
 async def print_pending_info(skey: str, gname: str) -> None:
     """
     Print pending items for stream and consumer group
@@ -57,8 +43,6 @@ async def worker(skey: str, gname: str, name: str) -> None:
     :param gname: consumer group name
     :param name: worker name
     """
-
-    await create_group(skey, gname)
     while True:
         for stream, messages in await redis.redis_client.xreadgroup(
             groupname=gname, consumername=name, count=1, streams={skey: ">"}

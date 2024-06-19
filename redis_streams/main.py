@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 import redis.asyncio as aioredis
+from redis import ResponseError
 
 from redis_streams import redis
 from redis_streams.pending_handler import pending_handler
@@ -25,11 +26,26 @@ async def redis_db() -> AsyncGenerator:
     await pool.disconnect()
 
 
+async def create_group(skey: str, gname: str) -> None:
+    """
+    Create consumer group
+    :param skey: stream name
+    :param gname: consumer group name
+    """
+    try:
+        await redis.redis_client.xgroup_create(name=skey, groupname=gname)
+    except ResponseError as e:
+        print(f"Raised: {e}")
+
+
 async def run():
     async with redis_db():
         tasks = [
             asyncio.create_task(producer.producer(settings.STREAM), name="Producer")
         ]
+
+        # Create consumer group
+        await create_group(settings.STREAM, settings.GROUP)
 
         # Create the worker (consumer) tasks
         for _ in range(settings.NUM_WORKERS):
@@ -41,6 +57,7 @@ async def run():
                 )
             )
 
+        # Create the pending handler worker
         for _ in range(settings.NUM_HANDLERS):
             name = f"Handler-{_}"
             tasks.append(
