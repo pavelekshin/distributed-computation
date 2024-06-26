@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  app_redis:
+    image: redis:6.2-alpine
+    hostname: redis
+    container_name: redis
+    command:
+      - 'redis-server'
+      - '--requirepass myStrongPassword'
+    expose:
+      - 6379
+    ports:
+      - "6379:6379"
