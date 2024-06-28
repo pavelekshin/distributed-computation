@@ -44,7 +44,7 @@ async def producer(qname: str) -> None:
             for data in await data_generator(start, job_id):
                 message_json = dumps(data)
                 timestamp = datetime.timestamp(datetime.now())
-                await channel.default_exchange.publish(
+                await channel.default_exchange.publish(  # publish message to queue
                     aio_pika.Message(
                         body=message_json.encode(),
                         timestamp=timestamp,

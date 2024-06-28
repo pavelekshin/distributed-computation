@@ -28,7 +28,7 @@ async def process_message(incoming_message: AbstractIncomingMessage) -> None:
 
 async def worker(qname: str) -> None:
     """
-    Consumes items from the Redis queue
+    Consumes items from the RabbitMQ queue
     :param qname: worker queue
     """
     queue = await create_queue(qname)

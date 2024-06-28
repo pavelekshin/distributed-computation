@@ -50,7 +50,7 @@ async def run():
             asyncio.create_task(producer.producer(settings.QUEUE), name="Producer")
         ]
 
-        # Create consumer group
+        # Create queue
         await create_queue(settings.QUEUE)
 
         # Create the worker (consumer) tasks
