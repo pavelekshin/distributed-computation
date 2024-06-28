@@ -11,10 +11,10 @@ async def process_message(incoming_message: AbstractIncomingMessage) -> None:
     Process messages retrieved from queue
     :param incoming_message: AbstractIncomingMessage
     """
-
     message = loads(incoming_message.body.decode())
     print(
-        f"Message received: id={message['id']}, message_number={message['data']['message_number']}"
+        f"Message received: id={message['id']}, from={incoming_message.consumer_tag}, "
+        f"message_number={message['data']['message_number']}"
     )
 
     # mimic potential processing errors
@@ -26,10 +26,11 @@ async def process_message(incoming_message: AbstractIncomingMessage) -> None:
         print("\tProcessing failed - requeuing...")
 
 
-async def worker(qname: str) -> None:
+async def worker(qname: str, name: str) -> None:
     """
     Consumes items from the RabbitMQ queue
+    :param name: worker name
     :param qname: worker queue
     """
     queue = await create_queue(qname)
-    await queue.consume(process_message)
+    await queue.consume(process_message, consumer_tag=name)

@@ -58,7 +58,7 @@ async def run():
             name = f"Worker-{_}"
             tasks.append(
                 asyncio.create_task(
-                    worker.worker(settings.QUEUE),
+                    worker.worker(settings.QUEUE, name),
                     name=name,
                 )
             )
