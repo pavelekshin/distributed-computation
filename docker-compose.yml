@@ -12,3 +12,12 @@ services:
       - 6379
     ports:
       - "6379:6379"
+  app_rabbitmq:
+    image: rabbitmq:3.13.3-management-alpine
+    hostname: rabbitmq
+    expose:
+      - 15672
+      - 5672
+    ports:
+      - "15672:15672"
+      - "5672:5672"

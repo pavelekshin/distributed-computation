@@ -18,7 +18,7 @@ async def pending_handler(skey: str, gname: str, name: str) -> None:
                 name=skey,
                 groupname=gname,
                 consumername=name,
-                min_idle_time=15_000,
+                min_idle_time=15_000,  # filtered tasks by this timeout
                 message_ids=message_ids,
             ):
                 await worker.process_message(message["json"], ids, skey, gname)
