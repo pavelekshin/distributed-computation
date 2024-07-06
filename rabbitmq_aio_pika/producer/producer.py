@@ -32,10 +32,10 @@ async def data_generator(start: int, job_id: str) -> list[dict[str, str | int]]:
     ]
 
 
-async def producer(qname: str) -> None:
+async def producer(queue_name: str) -> None:
     """
     Puts all the requested work into the work queue.
-    :param qname: producer queue
+    :param queue_name: producer queue
     """
     start = 0
     async with rabbit.rabbit_client.acquire() as channel:  # type: aio_pika.Channel
@@ -53,7 +53,7 @@ async def producer(qname: str) -> None:
                         delivery_mode=DeliveryMode.PERSISTENT,
                         # PERSISTENT messages prevent message lose while RabbitMQ is restarted
                     ),
-                    routing_key=qname,
+                    routing_key=queue_name,
                 )
             await asyncio.sleep(1)
             start += settings.NUM_TASKS

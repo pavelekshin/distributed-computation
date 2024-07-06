@@ -1,9 +1,10 @@
 import random
 from json import loads
 
+import aio_pika  # noqa
 from aio_pika.abc import AbstractIncomingMessage
 
-from rabbitmq_aio_pika.main import create_queue
+from rabbitmq_aio_pika import rabbit
 
 
 async def process_message(incoming_message: AbstractIncomingMessage) -> None:
@@ -26,11 +27,17 @@ async def process_message(incoming_message: AbstractIncomingMessage) -> None:
         print("\tProcessing failed - requeuing...")
 
 
-async def worker(qname: str, name: str) -> None:
+async def worker(queue_name: str, name: str) -> None:
     """
     Consumes items from the RabbitMQ queue
     :param name: worker name
-    :param qname: worker queue
+    :param queue_name: worker queue
     """
-    queue = await create_queue(qname)
-    await queue.consume(process_message, consumer_tag=name)
+    async with rabbit.rabbit_client.acquire() as channel:  # type: aio_pika.Channel
+        await channel.set_qos(prefetch_count=100)  # number of messages per worker
+        queue = await channel.declare_queue(
+            queue_name,
+            durable=True,  # Durable queue survive broker restart
+            auto_delete=False,
+        )
+        await queue.consume(process_message, consumer_tag=name)

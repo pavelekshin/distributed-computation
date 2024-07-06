@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 import aio_pika
-from aio_pika.abc import AbstractQueue, AbstractRobustConnection
+from aio_pika.abc import AbstractRobustConnection
 from aio_pika.pool import Pool
 
 from rabbitmq_aio_pika import rabbit
@@ -31,27 +31,11 @@ async def rabbitmq() -> AsyncGenerator:
     await rabbit.rabbit_client.close()
 
 
-async def create_queue(qname: str) -> AbstractQueue:
-    """
-    Create queue
-    :param qname: queue name
-    """
-    async with rabbit.rabbit_client.acquire() as channel:  # type: aio_pika.Channel
-        return await channel.declare_queue(
-            qname,
-            durable=True,  # Durable queue survive broker restart
-            auto_delete=False,
-        )
-
-
 async def run():
     async with rabbitmq():
         tasks = [
             asyncio.create_task(producer.producer(settings.QUEUE), name="Producer")
         ]
-
-        # Create queue
-        await create_queue(settings.QUEUE)
 
         # Create the worker (consumer) tasks
         for _ in range(settings.NUM_WORKERS):
