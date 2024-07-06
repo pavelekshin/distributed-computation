@@ -39,7 +39,7 @@ async def create_queue(qname: str) -> AbstractQueue:
     async with rabbit.rabbit_client.acquire() as channel:  # type: aio_pika.Channel
         return await channel.declare_queue(
             qname,
-            durable=False,
+            durable=True,  # Durable queue survive broker restart
             auto_delete=False,
         )
 

@@ -5,6 +5,7 @@ from random import randrange
 from uuid import uuid4
 
 import aio_pika
+from aio_pika import DeliveryMode
 
 from rabbitmq_aio_pika import rabbit
 from settings import settings
@@ -49,6 +50,8 @@ async def producer(qname: str) -> None:
                         body=message_json.encode(),
                         timestamp=timestamp,
                         correlation_id=job_id,
+                        delivery_mode=DeliveryMode.PERSISTENT,
+                        # PERSISTENT messages prevent message lose while RabbitMQ is restarted
                     ),
                     routing_key=qname,
                 )
