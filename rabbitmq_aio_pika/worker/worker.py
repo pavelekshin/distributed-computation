@@ -1,5 +1,6 @@
+import asyncio
+import json
 import random
-from json import loads
 
 import aio_pika  # noqa
 from aio_pika.abc import AbstractIncomingMessage
@@ -12,7 +13,7 @@ async def process_message(incoming_message: AbstractIncomingMessage) -> None:
     Process messages retrieved from queue
     :param incoming_message: AbstractIncomingMessage
     """
-    message = loads(incoming_message.body.decode())
+    message = json.loads(incoming_message.body.decode())
     print(
         f"Message received: id={message['id']}, from={incoming_message.consumer_tag}, "
         f"message_number={message['data']['message_number']}"
@@ -41,3 +42,4 @@ async def worker(queue_name: str, name: str) -> None:
             auto_delete=False,
         )
         await queue.consume(process_message, consumer_tag=name)
+        await asyncio.Future()

@@ -15,6 +15,7 @@ services:
   app_rabbitmq:
     image: rabbitmq:3.13.3-management-alpine
     hostname: rabbitmq
+    container_name: rabbitmq
     expose:
       - 15672
       - 5672
